@@ -85,6 +85,8 @@
 .burger-menu {
 	display: none;
 	justify-content: center;
+	border: none;
+	background-color: transparent;
 	align-items: center;
 	width: 30px;
 	height: 30px;

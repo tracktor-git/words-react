@@ -104,13 +104,13 @@
 .fas.fa-check {
 	font-size: 19px;
 	color: #214b38;
-	text-shadow: 0 1px #367c5e;
 	transition: all .2s ease-in-out;
+	filter: drop-shadow(0 1px #367c5e);
 }
 
 .submit:hover .fas.fa-check {
 	color: #2a6149;
-	text-shadow: 0 1px #3f916d;
+	filter: drop-shadow(0 1px #3f916d);
 	transition: all .2s ease-in-out;
 }
 
@@ -195,17 +195,20 @@
 	font-size: 19px;
 	color: #752727;
 	text-shadow: 0 1px #bd4040;
+	filter: drop-shadow(0 1px #bd4040);
 	transition: all .2s ease-in-out;
 }
 
 .finish-game:hover .fas.fa-times {
 	color: #742828;
 	text-shadow: 0 1px #cc4949;
+	filter: drop-shadow(0 1px #cc4949);
 	transition: all .2s ease-in-out;
 }
 
 .finish-game[disabled] .fas.fa-times {
 	text-shadow: none;
+	filter: none;
 	color:rgba(199, 199, 199, 0.5);
 }
 
