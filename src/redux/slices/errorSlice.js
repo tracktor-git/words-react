@@ -10,8 +10,11 @@ const errorSlice = createSlice({
     setErrorText(state, action) {
       state.text = action.payload;
     },
+    resetErrorText(state) {
+      state.text = '';
+    },
   },
 });
 
-export const { setErrorText } = errorSlice.actions;
+export const { setErrorText, resetErrorText } = errorSlice.actions;
 export default errorSlice.reducer;

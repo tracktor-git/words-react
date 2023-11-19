@@ -31,24 +31,48 @@
 
 .game-container form {
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	padding: 0 30px;
+}
+
+.game-container .form-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 100%;
+	border-radius: 50px;
+	transition: box-shadow 0.3s ease-out;
+}
+
+.invalid .form-wrapper {
+	box-shadow: 0 0 10px #a72626;
+}
+
+.error {
+	text-align: center;
+	font-weight: bold;
+	font-size: clamp(0.875rem, 0.783rem + 0.43vw, 1rem);
+    max-width: clamp(15.625rem, -0.543rem + 76.09vw, 37.5rem);
+	color: #bf4d4d;
+	margin-top: 15px;
 }
 
 .word-input {
-	width: 600px;
+	width: calc(100vw / 2 + 20px);
+    max-width: 650px;
 	padding: 20px;
 	border: none;
 	border-top-left-radius: 50px;
 	border-bottom-left-radius: 50px;
+	border-right: 2px solid #efe4e4;
 	background-color: #fff;
 	font-family: 'Roboto', sans-serif;
 	font-size: 18px;
 	font-weight: 400;
 	color: #303030;
-	opacity: .8;
+	opacity: 0.8;
 	transition: opacity .1s ease-in;
 }
 
@@ -84,7 +108,6 @@
 	border: 0;
 	border-top-right-radius: 50px;
 	border-bottom-right-radius: 50px;
-	border-left: 2px solid #efe4e4;
 	padding: 20px;
 	background-color: #2a6149;
 	transition: background-color .2s ease-in-out;
@@ -101,20 +124,22 @@
 	cursor: not-allowed;
 }
 
-.fas.fa-check {
+.send-icon {
 	font-size: 19px;
 	color: #214b38;
-	transition: all .2s ease-in-out;
+	text-shadow: 0 1px #367c5e;
 	filter: drop-shadow(0 1px #367c5e);
+	transition: all .2s ease-in-out;
 }
 
-.submit:hover .fas.fa-check {
+.submit:hover .send-icon {
 	color: #2a6149;
+	text-shadow: 0 1px #3f916d;
 	filter: drop-shadow(0 1px #3f916d);
 	transition: all .2s ease-in-out;
 }
 
-.submit[disabled] .fas.fa-check {
+.submit[disabled] .send-icon {
 	display: none;
 }
 
@@ -126,8 +151,8 @@
 	display: block;
 	padding: 0;
 	margin: 0;
-	width: 16px;
-	height: 16px;
+	width: 19px;
+	height: 19px;
 	border: 3px solid #335c4a;
 	border-top-color: transparent;
 	border-radius: 50%;
@@ -140,21 +165,6 @@
 	}
 	100% {
 		transform: rotate(360deg);
-	}
-}
-
-@media (max-width: 415px) {
-	.submit {
-		gap: 6px;
-	}
-
-	.fas.fa-check {
-		font-size: 17px;
-	}
-
-	.submit[disabled] i.spinner {
-		width: 15px;
-		height: 15px;
 	}
 }
 
@@ -208,18 +218,8 @@
 
 .finish-game[disabled] .fas.fa-times {
 	text-shadow: none;
-	filter: none;
+	filter: unset;
 	color:rgba(199, 199, 199, 0.5);
-}
-
-@media (max-width: 415px) {
-	.finish-game {
-		gap: 6px;
-	}
-
-	.fas.fa-times {
-		font-size: 17px;
-	}
 }
 
 .messages {
@@ -229,15 +229,14 @@
 	color: #d9d9d9;
 }
 
-.error {
-	font-weight: bold;
-	color: #bf4d4d;
-}
-
 .user-word {
 	font-weight: bold;
 	color: #fafafa;
 	text-shadow: 0 1px 5px rgba(251, 255, 0, 0.3);
+}
+
+.robot {
+	padding-top: 15px;
 }
 
 .robot-word {
@@ -253,15 +252,15 @@
 }
 
 .robot-word::after {
-	display: block;
 	content: '';
+	display: block;
 	border: 1px dashed #53b085;
 	position: absolute;
 	bottom: -2px;
 	left: 50%;
 	transform: translateX(-50%);
-	width: 80%;
-	transition: border .1s ease-in;
+	width: 95%;
+	transition: border 0.1s ease-in;
 }
 
 .robot-word:hover::after {
@@ -313,9 +312,13 @@
 	color: #e9e9e9;
 }
 
-.score p {
+.score {
 	line-height: 1.8;
 	font-size: 18px;
+}
+
+.score-count {
+	font-weight: bold;
 }
 
 @media (max-width: 980px) {
@@ -325,6 +328,10 @@
 }
 
 @media (max-width: 768px) {
+	.word-input {
+		width: calc(100vw / 2 + 60px);
+	}
+
 	.used-words {
 		max-width: 600px;
 	}
@@ -333,40 +340,11 @@
 		padding-top: calc(100px + 80px);
 		padding-bottom: 100px;
 	}
-
-	.word-input {
-		max-width: 450px;
-	}
 }
 
 @media (max-width: 660px) {
-	.word-input {
-		max-width: 350px;
-		padding: 15.5px;
-		font-size: 16px;
-	}
-
-	.submit {
-		padding: 14px;
-	}
-
-	.finish-game {
-		padding: 14px 16px;
-	}
-
 	.used-words {
 		max-width: 500px;
-	}
-}
-
-@media (max-width: 590px) {
-	.messages {
-		font-size: 16px;
-	}
-
-	.used-words {
-		max-width: 450px;
-		font-size: 14px;
 	}
 }
 
@@ -374,20 +352,6 @@
 	.game-container {
 		padding-top: calc(75px + 80px);
 		padding-bottom: 75px;
-	}
-
-	.word-input {
-		padding: 13px;
-	}
-
-	.submit {
-		font-size: 16px;
-		padding: 13px;
-	}
-
-	.finish-game {
-		font-size: 16px;
-		padding: 13px 15px;
 	}
 
 	.used-words {
@@ -400,22 +364,28 @@
 	}
 }
 
-@media (max-width: 412px) {
-	.submit {
-		font-size: 14px;
-		padding: 14px 10px;
-	}
-
+@media (max-width: 480px) {
 	.word-input {
-		font-size: 14px;
-		padding: 14px;
+		width: calc(100vw - 20px);
+	}
+	
+	.submit .send-icon ~ span {
+		display: none;
 	}
 
-	.finish-game {
-		font-size: 14px;
-		padding: 14px 16px;
+	.submit {
+		padding: 22px 25px 21px 20px;
 	}
 
+	.send-icon,
+	.submit:hover .send-icon{
+		filter: none;
+		text-shadow: none;
+		color: #fafafa;
+	}
+}
+
+@media (max-width: 412px) {
 	.used-words {
 		max-width: 350px;
 	}
