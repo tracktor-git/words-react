@@ -19,14 +19,8 @@ import routes from '../../routes';
 import 'react-tooltip/dist/react-tooltip.css';
 
 function pluralize(count) {
-  if (count % 10 === 1 && count % 100 !== 11) {
-    return 'слово';
-  }
-
-  if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
-    return 'слова';
-  }
-
+  if (count % 10 === 1 && count % 100 !== 11) return 'слово';
+  if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) return 'слова';
   return 'слов';
 }
 
@@ -37,7 +31,7 @@ const ScoreBlock = ({ score }) => {
 
   return (
     <p className="score">
-      <span>Вы отгадали </span>
+      <span>Вы назвали </span>
       <span className="score-count">
         {score}
         &nbsp;
