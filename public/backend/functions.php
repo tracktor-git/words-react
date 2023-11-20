@@ -80,4 +80,11 @@ function isDuplicate($userWord, $usedWords) {
 	return in_array($userWord, $usedWords);
 }
 
+/* Обработчик ошибок */
+function setError($text) {
+	$result = ['status' => 'error', 'message' => $text];
+	echo json_encode($result);
+	exit;
+}
+
 ?>

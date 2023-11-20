@@ -27,7 +27,7 @@ const Main = () => {
       <main className="game" id="game">
         <div className="container game-container">
           <GameControls />
-          <UsedWordsBlock words={usedWords} />
+          <UsedWordsBlock words={usedWords.filter((word) => word !== null)} />
         </div>
       </main>
     </section>

@@ -50,3 +50,9 @@
 		max-width: 40px;
 	}
 }
+
+@media (max-width: 480px) {
+	.social img {
+		max-width: 35px;
+	}
+}

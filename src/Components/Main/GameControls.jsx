@@ -17,6 +17,7 @@ import selectors from '../../redux/selectors';
 import routes from '../../routes';
 
 import 'react-tooltip/dist/react-tooltip.css';
+import robotLooseImage from '../../Images/robot_loose.webp';
 
 function pluralize(count) {
   if (count % 10 === 1 && count % 100 !== 11) return 'слово';
@@ -56,15 +57,11 @@ const FinishGameButton = ({ isShown, formik, handleClick }) => {
 
 const makeWordQuoted = (word) => `«${word}»`;
 
-const RobotAnswerBlock = ({ startLetter, robotWord }) => {
-  if (!startLetter || !robotWord) {
-    return null;
-  }
-
+const RobotAnswerBlock = ({ startLetter, robotWord, isGameOver }) => {
   const tooltipStyles = {
     backgroundColor: '#2a6149',
     color: '#fafafa',
-    maxWidth: '220px',
+    maxWidth: '250px',
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
   };
 
@@ -72,25 +69,33 @@ const RobotAnswerBlock = ({ startLetter, robotWord }) => {
     <div className="robot">
       <p>
         <span>Ответ робота: </span>
+        {isGameOver && <span className="robot-word loose">я сдаюсь :(</span>}
         <a
           href={routes.vocabularyUrl(robotWord)}
           className="robot-word"
           target="_blank"
           rel="noreferrer"
           data-tooltip-id="vocabulary-link-tooltip"
-          data-tooltip-content={`Посмотреть значение слова ${makeWordQuoted(robotWord)} в словаре`}
+          data-tooltip-content={!isGameOver && `Посмотреть значение слова ${makeWordQuoted(robotWord)} в словаре`}
           data-tooltip-place="right"
+          style={{ display: isGameOver ? 'none' : 'inline' }}
         >
           {makeWordQuoted(robotWord)}
         </a>
-        <span>.</span>
       </p>
+      {!isGameOver && (
       <p>
         <span>Назовите слово на букву </span>
         <span className="next-letter">{makeWordQuoted(startLetter)}</span>
-        <span>.</span>
       </p>
-      <Tooltip id="vocabulary-link-tooltip" style={tooltipStyles} />
+      )}
+      {isGameOver && (
+      <p>
+        <span>Для продолжения нажмите </span>
+        <b>{makeWordQuoted('Завершить игру')}</b>
+      </p>
+      )}
+      {!isGameOver && <Tooltip id="vocabulary-link-tooltip" className="tooltip" style={tooltipStyles} />}
     </div>
   );
 };
@@ -122,13 +127,13 @@ const ErrorBlock = ({ text }) => {
   );
 };
 
-const UserWordSchema = (usedWords, firstLetter) => Yup.object().shape({
+const UserWordSchema = (userWord, usedWords, firstLetter) => Yup.object().shape({
   userWord: Yup
     .string()
     .trim()
     .min(2, 'Слово должно состоять минимум из двух букв!')
-    .max(35, 'Слишком длинное слово!')
-    .notOneOf(usedWords, `Слова не должны повторяться! Назовите другое слово на букву ${makeWordQuoted(firstLetter)}.`)
+    .max(25, 'Слишком длинное слово! Максимальная допустимая длина - 25 букв!')
+    .notOneOf(usedWords, `Слово ${userWord} повторяется! Назовите другое слово на букву ${makeWordQuoted(firstLetter)}.`)
     .matches(/^[а-яёА-ЯЁ-]+$/, 'Введены некорректные символы! Допускаются буквы русского алфавита и дефис.', { excludeEmptyString: true })
     .matches(new RegExp(`^(${firstLetter}|\\b)`, 'i'), `Слово должно начинаться с буквы ${makeWordQuoted(firstLetter)}!`)
     .required('Не было введено слово!'),
@@ -136,19 +141,32 @@ const UserWordSchema = (usedWords, firstLetter) => Yup.object().shape({
 
 const handleBackendErrors = (message, word) => {
   switch (message) {
+    case 'INCORRECT_LENGTH':
+      return 'Слишком длинное слово! Максимальная допустимая длина - 25 букв!';
     case 'INCORRECT_QUERY':
       return 'Некорректный запрос к серверу';
     case 'DUPLICATE_WORD':
       return 'Слово повторяется! Назовите другое слово.';
     case 'WRONG_FIRST_LETTER':
       return 'Слово должно начинаться не с этой буквы!';
+    case 'NO_SUCH_WORD':
+      return `Слово ${makeWordQuoted(word)} отсутствует в словаре. Назовите другое слово.`;
     case 'ROBOT_LOOSE':
       return 'Робот не нашёл ответного слова. Поздравляем, вы выиграли!';
-    case 'NO_SUCH_WORD':
-      return `Слово ${makeWordQuoted(word)} не найдено. Назовите другое слово.`;
     default:
       return 'Произошла неизвестная ошибка';
   }
+};
+
+const GameResult = () => {
+  console.warn('Render Game Results');
+  return (
+    <div className="game-result">
+      <img src={robotLooseImage} alt="Результат игры" />
+      <h3 className="game-result-message">Поздравляем, вы выиграли!</h3>
+      <p>Робот не смог найти ответное слово.</p>
+    </div>
+  );
 };
 
 const GameControls = () => {
@@ -168,10 +186,12 @@ const GameControls = () => {
     validateOnBlur: false,
     onSubmit: async (values) => {
       dispatch(setErrorText(''));
-      const userWord = values.userWord.trim().toLowerCase().replaceAll('ё', 'е');
+      // TODO: Use polyfill for String.prototype.replaceAll() -->
+      const userWord = values.userWord.trim().toLowerCase().split('ё').join('е');
+      const validationSchema = UserWordSchema(makeWordQuoted(userWord), usedWords, lastRobotChar);
 
       try {
-        await UserWordSchema(usedWords, lastRobotChar).validate({ userWord });
+        await validationSchema.validate({ userWord });
 
         const { data } = await axios({
           method: 'post',
@@ -186,6 +206,10 @@ const GameControls = () => {
         });
 
         if (data.status === 'error') {
+          if (data.message === 'ROBOT_LOOSE') {
+            dispatch(addUsedWord(userWord));
+            dispatch(addUsedWord(null));
+          }
           const errorMessage = handleBackendErrors(data.message, userWord);
           formik.setFieldError('userWord', errorMessage);
           return;
@@ -206,7 +230,9 @@ const GameControls = () => {
 
         if (error instanceof AxiosError) {
           formik.setFieldError('userWord', 'Ошибка сети');
+          return;
         }
+        console.log(error);
       }
     },
   });
@@ -228,10 +254,16 @@ const GameControls = () => {
     formik.resetForm();
   };
 
-  const isGameStarted = () => currentScore > 0 && usedWords.length > 0;
+  const isGameStarted = currentScore > 0 && usedWords.length > 0;
+  const isGameOver = lastRobotChar === null && lastRobotWord === null;
+
+  const inputPlaceholder = lastRobotChar
+    ? `Введите слово на букву ${makeWordQuoted(lastRobotChar)}...`
+    : 'Введите слово...';
 
   return (
     <>
+      {!isGameOver && (
       <form onSubmit={formik.handleSubmit} className={formik.errors.userWord && 'invalid'}>
         <div className="form-wrapper">
           <input
@@ -239,28 +271,34 @@ const GameControls = () => {
             autoComplete="off"
             className="word-input"
             name="userWord"
-            placeholder="Введите слово..."
+            placeholder={inputPlaceholder}
             ref={userWordInputRef}
             disabled={formik.isSubmitting}
             value={formik.values.userWord}
             onChange={formik.handleChange}
           />
           <button className="submit" type="submit" disabled={formik.isSubmitting}>
-            <i className="spinner" />
+            {formik.isSubmitting && <i className="spinner" />}
             <FontAwesomeIcon icon={faPaperPlane} className="send-icon" />
             <span>Отправить</span>
           </button>
         </div>
         <ErrorBlock text={errorText} />
       </form>
-      {isGameStarted() && (
+      )}
+      {isGameOver && <GameResult />}
+      {isGameStarted && (
       <div className="messages">
         <UserWordBlock word={currentUserWord} />
-        <RobotAnswerBlock startLetter={lastRobotChar} robotWord={lastRobotWord} />
+        <RobotAnswerBlock
+          startLetter={lastRobotChar}
+          robotWord={lastRobotWord}
+          isGameOver={isGameOver}
+        />
       </div>
       )}
       <ScoreBlock score={currentScore} />
-      <FinishGameButton formik={formik} handleClick={handleFinishGame} isShown={isGameStarted()} />
+      <FinishGameButton formik={formik} handleClick={handleFinishGame} isShown={isGameStarted} />
     </>
   );
 };

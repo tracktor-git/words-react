@@ -45,7 +45,12 @@ const Header = () => {
           <a href="#about" className="nav-link" onClick={handleNavLinkClick}>Об авторе</a>
           <a href="#rules" className="nav-link" onClick={handleNavLinkClick}>Правила</a>
         </nav>
-        <button type="button" aria-label="mobile-nav" className={isMenuOpened ? 'burger-menu active' : 'burger-menu'} onClick={() => setMenuOpened(!isMenuOpened)}>
+        <button
+          type="button"
+          aria-label="mobile-nav"
+          className={isMenuOpened ? 'burger-menu active' : 'burger-menu'}
+          onClick={() => setMenuOpened(!isMenuOpened)}
+        >
           <span />
         </button>
       </div>
