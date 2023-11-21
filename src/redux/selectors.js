@@ -1,6 +1,8 @@
+import '../polyfills';
+
 const getCurrentScore = (state) => state.scoreSlice.score;
 const getUsedWords = (state) => state.usedWordsSlice.usedWords;
-const getLastRobotWord = (state) => state.usedWordsSlice.usedWords[0];
+const getLastRobotWord = (state) => state.usedWordsSlice.usedWords.at(0);
 const getErrorText = (state) => state.errorSlice.text;
 
 const getLastRobotChar = (state) => {
@@ -15,9 +17,9 @@ const getLastRobotChar = (state) => {
     return null;
   }
 
-  const lastChar = invalidChars.includes(word[word.length - 1])
-    ? word[word.length - 2]
-    : word[word.length - 1];
+  const lastChar = invalidChars.includes(word.at(-1))
+    ? word.at(-2)
+    : word.at(-1);
 
   return lastChar;
 };

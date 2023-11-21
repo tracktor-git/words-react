@@ -1,3 +1,5 @@
+import '../../polyfills';
+
 import * as Yup from 'yup';
 import Axios from 'axios';
 
@@ -83,8 +85,7 @@ const GameControls = () => {
     validateOnBlur: false,
     onSubmit: async (values) => {
       dispatch(resetErrorText());
-      // TODO: Use polyfill for String.prototype.replaceAll() -->
-      const userWord = values.userWord.trim().toLowerCase().split('ё').join('е');
+      const userWord = values.userWord.trim().toLowerCase().replaceAll('ё', 'е');
       const validationSchema = UserWordSchema(userWord, usedWords, lastRobotChar);
 
       try {
