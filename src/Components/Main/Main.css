@@ -1,10 +1,11 @@
 .main {
 	position: relative;
 	min-height: 100vh;
-	background-image: url('../../Images/background-3.jpg');
-	background-position: top;
-	background-repeat: no-repeat;
-	background-size: cover;
+	background-image: url('../../Images/background-3.webp');
+	background-position: top left;
+	background-repeat: repeat;
+	background-attachment: scroll;
+	background-size: auto;
 }
 
 .main:before {
@@ -64,10 +65,7 @@
     max-width: 650px;
 	padding: 20px;
 	border: none;
-	border-top-left-radius: 50px;
-	border-bottom-left-radius: 50px;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
+	border-radius: 50px 0 0 50px;
 	border-right: 2px solid #efe4e4;
 	background-color: #fff;
 	font-family: 'Roboto', sans-serif;
@@ -208,7 +206,7 @@
 	color:rgba(199, 199, 199, 1);
 }
 
-.fas.fa-times {
+.finish-game-icon {
 	font-size: 19px;
 	color: #752727;
 	text-shadow: 0 1px #bd4040;
@@ -216,14 +214,14 @@
 	transition: all .2s ease-in-out;
 }
 
-.finish-game:hover .fas.fa-times {
+.finish-game:hover .finish-game-icon {
 	color: #742828;
 	text-shadow: 0 1px #cc4949;
 	filter: drop-shadow(0 1px #cc4949);
 	transition: all .2s ease-in-out;
 }
 
-.finish-game[disabled] .fas.fa-times {
+.finish-game[disabled] .finish-game-icon {
 	text-shadow: none;
 	filter: unset;
 	color:rgba(199, 199, 199, 0.5);

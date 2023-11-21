@@ -34,6 +34,7 @@ if (isWordExists($userWord)) {
 	
 	/* Проверим, нашёл ли робот ответное слово, если нет - то он проиграл */
 	if (!$robotWord) {
+		sleep(3); // Даём роботу немного "подумать"
 		setError('ROBOT_LOOSE');
 	}
 	
