@@ -13,6 +13,7 @@ import GameResultBlock from './GameResultBlock';
 import ScoreBlock from './ScoreBlock';
 import FinishGameButton from './FinishGameButton';
 import GameForm from './GameForm';
+import UsedWordsBlock from './UsedWordsBlock';
 
 import { addUsedWords, resetGame } from '../../redux/slices/usedWordsSlice';
 import { incrementScore, resetScore } from '../../redux/slices/scoreSlice';
@@ -32,7 +33,7 @@ const UserWordSchema = (userWord, usedWords, firstLetter) => {
       .min(2, 'Слово должно состоять минимум из двух букв!')
       .max(25, 'Слишком длинное слово! Максимальная допустимая длина - 25 букв!')
       .notOneOf(usedWords, `Слово «${userWord}» повторяется! Назовите другое слово на букву «${firstLetter}».`)
-      .matches(alowedSymbolsRegExp, 'Допускаются буквы русского алфавита и дефис.', { excludeEmptyString: true })
+      .matches(alowedSymbolsRegExp, 'Допускаются только буквы русского алфавита и дефис.', { excludeEmptyString: true })
       .matches(firstLetterRegexp, `Слово должно начинаться с буквы «${firstLetter}»!`)
       .required('Не было введено слово!'),
   });
@@ -50,8 +51,6 @@ const handleBackendErrors = (message, word) => {
       return 'Слово должно начинаться не с этой буквы!';
     case 'NO_SUCH_WORD':
       return `Слово «${word}» отсутствует в словаре. Назовите другое слово.`;
-    case 'ROBOT_LOOSE':
-      return 'Робот не нашёл ответного слова. Поздравляем, вы выиграли!';
     default:
       return 'Произошла неизвестная ошибка';
   }
@@ -70,11 +69,23 @@ const handleSubmitError = (error, setFieldError) => {
   console.log(error);
 };
 
+const setAxiosOptions = (userWord, usedWords) => ({
+  method: 'post',
+  url: routes.backendUrl,
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  data: {
+    payload: {
+      usedWords: JSON.stringify([...usedWords]),
+      userWord: JSON.stringify(userWord),
+    },
+  },
+});
+
 const GameControls = () => {
   const dispatch = useDispatch();
 
   const usedWords = useSelector(selectors.getUsedWords);
-  const currentUserWord = usedWords.length > 1 ? usedWords[1] : null;
+  const currentUserWord = usedWords.length > 1 ? usedWords.at(1) : null;
   const currentScore = useSelector(selectors.getCurrentScore);
   const lastRobotChar = useSelector(selectors.getLastRobotChar);
   const lastRobotWord = useSelector(selectors.getLastRobotWord);
@@ -90,33 +101,19 @@ const GameControls = () => {
 
       try {
         await validationSchema.validate({ userWord });
-        const { data } = await Axios({
-          method: 'post',
-          url: routes.backendUrl,
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          data: {
-            payload: {
-              usedWords: JSON.stringify([...usedWords]),
-              userWord: JSON.stringify(userWord),
-            },
-          },
-        });
+        const { data } = await Axios(setAxiosOptions(userWord, usedWords));
 
-        if (data.status === 'ok') {
-          const robotWord = data.message;
-          dispatch(addUsedWords([robotWord, userWord]));
-          dispatch(incrementScore());
-          formik.resetForm();
-        }
-
-        if (data.status === 'error') {
-          if (data.message === 'ROBOT_LOOSE') {
-            const robotWord = null;
-            dispatch(addUsedWords([robotWord, userWord]));
+        switch (data.status) {
+          case 'ok':
+            dispatch(addUsedWords([data.message, userWord]));
             dispatch(incrementScore());
-          }
-          const errorMessage = handleBackendErrors(data.message, userWord);
-          formik.setFieldError('userWord', errorMessage);
+            formik.resetForm();
+            break;
+          case 'error':
+            formik.setFieldError('userWord', handleBackendErrors(data.message, userWord));
+            break;
+          default:
+            throw new Error(`Unexpected answer status: ${data.status}`);
         }
       } catch (error) {
         handleSubmitError(error, formik.setFieldError);
@@ -160,6 +157,7 @@ const GameControls = () => {
         isDisabled={formik.isSubmitting}
         handleClick={handleFinishGame}
       />
+      <UsedWordsBlock words={usedWords.filter((word) => word !== null)} />
     </>
   );
 };

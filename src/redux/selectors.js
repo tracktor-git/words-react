@@ -17,10 +17,7 @@ const getLastRobotChar = (state) => {
     return null;
   }
 
-  const lastChar = invalidChars.includes(word.at(-1))
-    ? word.at(-2)
-    : word.at(-1);
-
+  const lastChar = invalidChars.includes(word.at(-1)) ? word.at(-2) : word.at(-1);
   return lastChar;
 };
 
