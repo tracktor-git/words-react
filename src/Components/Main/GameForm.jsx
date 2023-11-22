@@ -23,9 +23,9 @@ const inputSelect = (element) => {
   }, 10);
 };
 
-const SubmitButton = ({ isSubmiting }) => (
-  <button className="submit" type="submit" disabled={isSubmiting}>
-    {isSubmiting && <i className="spinner" />}
+const SubmitButton = ({ isSubmitting }) => (
+  <button className="submit" type="submit" disabled={isSubmitting}>
+    {isSubmitting && <i className="spinner" />}
     <FontAwesomeIcon icon={faPaperPlane} className="send-icon" />
     <span>Отправить</span>
   </button>
@@ -40,8 +40,6 @@ const GameForm = ({ formik }) => {
     inputSelect(inputRef?.current);
   }, [formik.errors.userWord, usedWords]);
 
-  const placeholder = lastRobotChar ? `Введите слово на букву «${lastRobotChar}»...` : 'Введите слово...';
-
   return (
     <form onSubmit={formik.handleSubmit} className={formik.errors.userWord && 'invalid'}>
       <div className="form-wrapper">
@@ -52,12 +50,12 @@ const GameForm = ({ formik }) => {
           autoComplete="off"
           autoFocus
           ref={inputRef}
-          placeholder={placeholder}
+          placeholder={lastRobotChar ? `Введите слово на букву «${lastRobotChar}»...` : 'Введите слово...'}
           disabled={formik.isSubmitting}
           value={formik.values.userWord}
           onChange={formik.handleChange}
         />
-        <SubmitButton isSubmiting={formik.isSubmitting} />
+        <SubmitButton isSubmitting={formik.isSubmitting} />
       </div>
       <ErrorBlock text={formik.errors.userWord} />
     </form>
