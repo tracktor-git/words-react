@@ -30,12 +30,12 @@ const UserWordSchema = (userWord, usedWords, firstLetter) => {
     userWord: Yup
       .string()
       .trim()
+      .required('Не было введено слово!')
       .min(2, 'Слово должно состоять минимум из двух букв!')
       .max(25, 'Слишком длинное слово! Максимальная допустимая длина - 25 букв!')
-      .notOneOf(usedWords, `Слово «${userWord}» повторяется! Назовите другое слово на букву «${firstLetter}».`)
       .matches(alowedSymbolsRegExp, 'Допускаются только буквы русского алфавита и дефис.', { excludeEmptyString: true })
-      .matches(firstLetterRegexp, `Слово должно начинаться с буквы «${firstLetter}»!`)
-      .required('Не было введено слово!'),
+      .test('firstLetter', `Слово должно начинаться с буквы «${firstLetter}»!`, (value) => value.match(firstLetterRegexp))
+      .test('uniqueWord', `Слово «${userWord}» повторяется! Назовите другое слово на букву «${firstLetter}».`, (value) => !usedWords.includes(value)),
   });
 };
 
@@ -95,7 +95,7 @@ const GameControls = () => {
     validateOnChange: false,
     validateOnBlur: false,
     onSubmit: async (values) => {
-      dispatch(resetErrorText());
+      if (formik.errors.userWord) dispatch(resetErrorText());
       const userWord = values.userWord.trim().toLowerCase().replaceAll('ё', 'е');
       const validationSchema = UserWordSchema(userWord, usedWords, lastRobotChar);
 

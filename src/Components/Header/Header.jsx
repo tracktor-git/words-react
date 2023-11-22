@@ -13,6 +13,12 @@ const scrollToBlock = (event) => {
   window.scrollTo({ top: offset, behavior: 'smooth' });
 };
 
+const navList = [
+  { id: 1, href: 'game', title: 'Игра' },
+  { id: 2, href: 'about', title: 'Об авторе' },
+  { id: 3, href: 'rules', title: 'Правила' },
+];
+
 const Header = () => {
   const [isMenuOpened, setMenuOpened] = useState();
 
@@ -29,6 +35,9 @@ const Header = () => {
     scrollToBlock(event);
   };
 
+  const handleNavButtonClick = () => setMenuOpened(!isMenuOpened);
+  const butonClassName = isMenuOpened ? 'burger-menu active' : 'burger-menu';
+
   return (
     <header className="header">
       <div className="container header-container">
@@ -41,16 +50,9 @@ const Header = () => {
           </a>
         </div>
         <nav className={isMenuOpened ? 'nav opened' : 'nav'}>
-          <a href="#game" className="nav-link" onClick={handleNavLinkClick}>Игра</a>
-          <a href="#about" className="nav-link" onClick={handleNavLinkClick}>Об авторе</a>
-          <a href="#rules" className="nav-link" onClick={handleNavLinkClick}>Правила</a>
+          {navList.map(({ id, href, title }) => <a key={id} href={`#${href}`} className="nav-link" onClick={handleNavLinkClick}>{title}</a>)}
         </nav>
-        <button
-          type="button"
-          aria-label="mobile-nav"
-          className={isMenuOpened ? 'burger-menu active' : 'burger-menu'}
-          onClick={() => setMenuOpened(!isMenuOpened)}
-        >
+        <button type="button" aria-label="mobile-nav" className={butonClassName} onClick={handleNavButtonClick}>
           <span />
         </button>
       </div>

@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-one-expression-per-line */
 import './Main.css';
 import GameControls from './GameControls';
 

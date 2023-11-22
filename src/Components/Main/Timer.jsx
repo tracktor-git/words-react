@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+
+const START_TIME = 30;
+const ADDITIONAL_TIME = 30;
 
 const Timer = () => {
-  const [time, setTime] = useState(() => {
+  const [time, setTime] = React.useState(() => {
     const storedTime = localStorage.getItem('timer');
     if (storedTime) {
       const storedTimestamp = parseInt(localStorage.getItem('timestamp'), 10);
@@ -10,10 +13,10 @@ const Timer = () => {
       const remainingTime = parseInt(storedTime, 10) - elapsedTime;
       return remainingTime > 0 ? remainingTime : 0;
     }
-    return 30; // Значение по умолчанию
+    return START_TIME;
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     const interval = setInterval(() => {
       if (time > 0) {
         setTime((prevTime) => {
@@ -34,7 +37,7 @@ const Timer = () => {
 
   const handleIncrementTime = () => {
     setTime((prevTime) => {
-      const newTime = prevTime + 30;
+      const newTime = prevTime + ADDITIONAL_TIME;
       localStorage.setItem('timer', newTime.toString());
       return newTime;
     });

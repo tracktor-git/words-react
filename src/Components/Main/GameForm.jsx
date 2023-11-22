@@ -17,24 +17,30 @@ const ErrorBlock = ({ text }) => {
   );
 };
 
+const inputSelect = (element) => {
+  setTimeout(() => {
+    element?.select();
+  }, 10);
+};
+
+const SubmitButton = ({ isSubmiting }) => (
+  <button className="submit" type="submit" disabled={isSubmiting}>
+    {isSubmiting && <i className="spinner" />}
+    <FontAwesomeIcon icon={faPaperPlane} className="send-icon" />
+    <span>Отправить</span>
+  </button>
+);
+
 const GameForm = ({ formik }) => {
   const usedWords = useSelector(selectors.getUsedWords);
   const lastRobotChar = useSelector(selectors.getLastRobotChar);
   const inputRef = React.useRef(null);
 
-  const inputSelect = () => {
-    setTimeout(() => {
-      inputRef?.current.select();
-    }, 10);
-  };
-
   React.useEffect(() => {
-    inputSelect();
+    inputSelect(inputRef?.current);
   }, [formik.errors.userWord, usedWords]);
 
-  const placeholder = lastRobotChar
-    ? `Введите слово на букву «${lastRobotChar}»...`
-    : 'Введите слово...';
+  const placeholder = lastRobotChar ? `Введите слово на букву «${lastRobotChar}»...` : 'Введите слово...';
 
   return (
     <form onSubmit={formik.handleSubmit} className={formik.errors.userWord && 'invalid'}>
@@ -51,11 +57,7 @@ const GameForm = ({ formik }) => {
           value={formik.values.userWord}
           onChange={formik.handleChange}
         />
-        <button className="submit" type="submit" disabled={formik.isSubmitting}>
-          {formik.isSubmitting && <i className="spinner" />}
-          <FontAwesomeIcon icon={faPaperPlane} className="send-icon" />
-          <span>Отправить</span>
-        </button>
+        <SubmitButton isSubmiting={formik.isSubmitting} />
       </div>
       <ErrorBlock text={formik.errors.userWord} />
     </form>
