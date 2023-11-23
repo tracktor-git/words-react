@@ -13,18 +13,18 @@ import storage from 'redux-persist/lib/storage';
 
 import scoreSlice from './slices/scoreSlice';
 import usedWordsSlice from './slices/usedWordsSlice';
-import errorSlice from './slices/errorSlice';
+import timerSlice from './slices/timerSlice';
 
 const rootReducer = combineReducers({
   scoreSlice,
   usedWordsSlice,
-  errorSlice,
+  timerSlice,
 });
 
 const persistConfig = {
   key: ' <TracktorWordsGame/>',
   storage,
-  whitelist: ['scoreSlice', 'usedWordsSlice'],
+  whitelist: ['scoreSlice', 'usedWordsSlice', 'timerSlice'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

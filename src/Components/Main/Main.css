@@ -281,6 +281,49 @@
 	border: none;
 }
 
+.timer {
+	font-weight: bold;
+	color: rgba(99, 206, 156, 0.849);
+	pointer-events: none;
+	user-select: none;
+}
+  
+.timer.danger {
+	color: #bd4040;
+	animation: timeBlink 1s ease-in-out infinite;
+}
+  
+@keyframes timeBlink {
+	0% {
+	  opacity: 1;
+	}
+	50% {
+	  opacity: 0;
+	}
+	100% {
+	  opacity: 1;
+	}
+}
+  
+.timer::before {
+	position: relative;
+	top: 4px;
+	margin: 0 4px;
+	content: '';
+	display: inline-block;
+	width: 23px;
+	height: 23px;
+	background-image: url('../../Images/timer.svg');
+	background-position: center;
+	background-size: cover;
+}
+  
+@media (max-width: 365px) {
+	.timer {
+	  display: block;
+	}
+}
+
 .next-letter {
 	font-weight: bold;
 	color: #fafafa;
@@ -351,6 +394,7 @@
 	width: 100%;
 	width: clamp(12.5rem, 6.25rem + 31.25vw, 21.875rem);
 	pointer-events: none;
+	user-select: none;
 	opacity: 0.9;
 	margin-bottom: 10px;
 }
@@ -362,6 +406,11 @@
 	font-weight: bold;
 	color: #53b085;
 	text-shadow: 0 0 15px rgba(85, 195, 145, 0.8);
+}
+
+.game-result-message.loose {
+	color: #a72626;
+	text-shadow: 0 0 15px #bd4040;
 }
 
 .game-result-message + p {

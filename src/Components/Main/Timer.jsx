@@ -1,54 +1,41 @@
 import React from 'react';
 
-const START_TIME = 30;
-const ADDITIONAL_TIME = 30;
+import { useDispatch, useSelector } from 'react-redux';
+import { decrementTime } from '../../redux/slices/timerSlice';
+
+import selectors from '../../redux/selectors';
+
+const formatTime = (seconds) => {
+  const minutes = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const remainingSeconds = String(seconds % 60).padStart(2, '0');
+  return `${minutes}:${remainingSeconds}`;
+};
 
 const Timer = () => {
-  const [time, setTime] = React.useState(() => {
-    const storedTime = localStorage.getItem('timer');
-    if (storedTime) {
-      const storedTimestamp = parseInt(localStorage.getItem('timestamp'), 10);
-      const currentTime = Math.floor(Date.now() / 1000); // Текущее время в секундах
-      const elapsedTime = currentTime - storedTimestamp;
-      const remainingTime = parseInt(storedTime, 10) - elapsedTime;
-      return remainingTime > 0 ? remainingTime : 0;
-    }
-    return START_TIME;
-  });
+  const dispatch = useDispatch();
+
+  const secondsLeft = useSelector(selectors.getTime);
+  const timerClassName = secondsLeft <= 10 ? 'timer danger' : 'timer';
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      if (time > 0) {
-        setTime((prevTime) => {
-          const newTime = prevTime - 1;
-          localStorage.setItem('timer', newTime.toString());
-          localStorage.setItem('timestamp', Math.floor(Date.now() / 1000).toString()); // Сохраняем текущую отметку времени
-          return newTime;
-        });
-      } else {
-        clearInterval(interval);
+      if (secondsLeft > 0) {
+        dispatch(decrementTime());
+        return;
       }
+      clearInterval(interval);
     }, 1000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [time]);
+  }, [dispatch, secondsLeft]);
 
-  const handleIncrementTime = () => {
-    setTime((prevTime) => {
-      const newTime = prevTime + ADDITIONAL_TIME;
-      localStorage.setItem('timer', newTime.toString());
-      return newTime;
-    });
-  };
+  if (!secondsLeft) {
+    return null;
+  }
 
-  return (
-    <div>
-      <h1>{`Таймер: ${time} сек`}</h1>
-      <button type="button" onClick={handleIncrementTime}>Выполнить действие</button>
-    </div>
-  );
+  return <span className={timerClassName}>{formatTime(secondsLeft)}</span>;
 };
 
 export default Timer;

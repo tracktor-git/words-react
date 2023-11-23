@@ -3,7 +3,7 @@ import '../polyfills';
 const getCurrentScore = (state) => state.scoreSlice.score;
 const getUsedWords = (state) => state.usedWordsSlice.usedWords;
 const getLastRobotWord = (state) => state.usedWordsSlice.usedWords.at(0);
-const getErrorText = (state) => state.errorSlice.text;
+const getTime = (state) => state.timerSlice.time;
 
 const invalidStartChars = ['ь', 'ъ', 'ы'];
 
@@ -27,5 +27,5 @@ export default {
   getUsedWords,
   getLastRobotChar,
   getLastRobotWord,
-  getErrorText,
+  getTime,
 };

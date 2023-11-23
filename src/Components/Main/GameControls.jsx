@@ -3,7 +3,6 @@ import '../../polyfills';
 import * as Yup from 'yup';
 import Axios from 'axios';
 
-import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,9 +14,10 @@ import FinishGameButton from './FinishGameButton';
 import GameForm from './GameForm';
 import UsedWordsBlock from './UsedWordsBlock';
 
-import { addUsedWords, resetGame } from '../../redux/slices/usedWordsSlice';
+import { addUsedWords, resetUsedWords } from '../../redux/slices/usedWordsSlice';
 import { incrementScore, resetScore } from '../../redux/slices/scoreSlice';
-import { setErrorText, resetErrorText } from '../../redux/slices/errorSlice';
+import { addTime, resetTime } from '../../redux/slices/timerSlice';
+
 import selectors from '../../redux/selectors';
 
 import routes from '../../routes';
@@ -89,13 +89,13 @@ const GameControls = () => {
   const currentScore = useSelector(selectors.getCurrentScore);
   const lastRobotChar = useSelector(selectors.getLastRobotChar);
   const lastRobotWord = useSelector(selectors.getLastRobotWord);
+  const timeLeft = useSelector(selectors.getTime);
 
   const formik = useFormik({
     initialValues: { userWord: '' },
     validateOnChange: false,
     validateOnBlur: false,
     onSubmit: async (values) => {
-      if (formik.errors.userWord) dispatch(resetErrorText());
       const userWord = values.userWord.trim().toLowerCase().replaceAll('ё', 'е');
       const validationSchema = UserWordSchema(userWord, usedWords, lastRobotChar);
 
@@ -107,6 +107,7 @@ const GameControls = () => {
           case 'ok':
             dispatch(addUsedWords([data.message, userWord]));
             dispatch(incrementScore());
+            dispatch(addTime());
             formik.resetForm();
             break;
           case 'error':
@@ -121,31 +122,26 @@ const GameControls = () => {
     },
   });
 
-  useEffect(() => {
-    if (formik.errors.userWord) {
-      dispatch(setErrorText(formik.errors.userWord));
-    }
-  }, [dispatch, formik.errors.userWord]);
-
   const handleFinishGame = () => {
-    dispatch(resetErrorText());
-    dispatch(resetGame());
+    dispatch(resetUsedWords());
     dispatch(resetScore());
+    dispatch(resetTime());
     formik.resetForm();
   };
 
   const isGameStarted = currentScore > 0 && usedWords.length > 0;
-  const isGameOver = lastRobotChar === null && lastRobotWord === null;
+  const isUserLoose = timeLeft < 1;
+  const isRobotLoose = lastRobotChar === null && lastRobotWord === null;
 
   return (
     <>
-      <GameResultBlock isShown={isGameOver} />
-      {!isGameOver && <GameForm formik={formik} />}
+      <GameResultBlock isShown={isRobotLoose || isUserLoose} robotWin={timeLeft < 1} />
+      {!isUserLoose && !isRobotLoose && <GameForm formik={formik} />}
       {isGameStarted && (
         <div className="messages">
           <UserWordBlock word={currentUserWord} />
           <RobotAnswerBlock
-            isGameOver={isGameOver}
+            isRobotLoose={isRobotLoose}
             startLetter={lastRobotChar}
             word={lastRobotWord}
           />

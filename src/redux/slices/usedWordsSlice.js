@@ -10,11 +10,11 @@ const usedWordsSlice = createSlice({
     addUsedWords(state, action) {
       state.usedWords.unshift(...action.payload);
     },
-    resetGame(state) {
+    resetUsedWords(state) {
       state.usedWords = initialState.usedWords;
     },
   },
 });
 
-export const { addUsedWords, resetGame } = usedWordsSlice.actions;
+export const { addUsedWords, resetUsedWords } = usedWordsSlice.actions;
 export default usedWordsSlice.reducer;

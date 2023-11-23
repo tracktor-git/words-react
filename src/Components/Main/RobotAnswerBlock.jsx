@@ -1,6 +1,8 @@
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
 
+import Timer from './Timer';
+
 import routes from '../../routes';
 
 const WordLink = ({ word }) => {
@@ -29,8 +31,8 @@ const WordLink = ({ word }) => {
   );
 };
 
-const RobotAnswerBlock = ({ startLetter, word, isGameOver }) => {
-  if (isGameOver) {
+const RobotAnswerBlock = ({ startLetter, word, isRobotLoose }) => {
+  if (isRobotLoose) {
     return (
       <div className="robot">
         <p>
@@ -54,6 +56,7 @@ const RobotAnswerBlock = ({ startLetter, word, isGameOver }) => {
       <p>
         <span>Назовите слово на букву </span>
         <span className="next-letter">{`«${startLetter}»`}</span>
+        <Timer />
       </p>
     </div>
   );
