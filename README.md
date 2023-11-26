@@ -1,70 +1,64 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Игра в слова
 
-## Available Scripts
+Классическая игра в слова. Пользователь называет слово, робот отвечает словом на последнюю букву слова пользователя, и так далее.
 
-In the project directory, you can run:
 
-### `npm start`
+## Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Работу приложения можно посмотреть по ссылке: https://skibidishes.ru
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+## Установка
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Для установки frontend-части:
 
-### `npm run build`
+1. Клонируйте репозиторий:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+git clone https://github.com/tracktor-git/words-game
+```
+2. Установите все зависимости:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm ci
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Запустите проект:
 
-### `npm run eject`
+```bash
+npm run start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Для установки backend-части:
+1. Для работы backend-части необходим php версии 7.4 и выше, запущенный под управлением веб-сервера, например Apache2.4. В php должны быть установлены модули mbstring и sqlite3.
+2. Содержимое папки /public/backend разместите на настроенном веб-сервере.
+3. Для работы в режиме разработки в файле /src/routes.js укажите URL вашего веб-сервера, куда будут отправляться запросы из фронтенда.
+4. Поскольку в режиме разработки фронтенд и бэкенд будут работать на разных портах, в php необходимо будет прописать заголовки, разрешающие CORS запросы. Это можно сделать в настройках веб-сервера, либо же в файле index.php бэкенд части.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Настройка в index.php:
+```php
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST');
+header("Access-Control-Allow-Headers: X-Requested-With");
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Пример настройки в конфигурации веб-сервера Apache (должен быть включен apache-модуль headers):
+```
+<Directory /var/www/html>
+   ...
+   Header set Access-Control-Allow-Origin "*"
+   ...
+</Directory>
+```
+## Deployment
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Для деплоя проекта необходимо выполнить его сборку и размещение на вашем веб-сервере
 
-## Learn More
+1. Собираем проект:
+```bash
+npm run build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+2. Содержимое полученной папки "build" размещаем на веб-сервере с поддержкой php7.4 и выше (должны быть включены php-модули mbstring и sqlite3).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

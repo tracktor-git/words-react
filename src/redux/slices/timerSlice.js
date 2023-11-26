@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-const INITIAL_TIME = 25;
-const ADDITIONAL_TIME = 5;
+const INITIAL_TIME = 20;
+const ADDITIONAL_TIME = 10;
 const TIME_LIMIT = 60 * 10;
 
 const initialState = { time: INITIAL_TIME, timestamp: null };
