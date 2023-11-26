@@ -12,8 +12,11 @@ const timerSlice = createSlice({
   initialState,
   reducers: {
     addTime(state) {
-      if (state.time < TIME_LIMIT) {
-        state.time += ADDITIONAL_TIME;
+      const newTime = state.time + ADDITIONAL_TIME;
+      if (newTime > TIME_LIMIT) {
+        state.time = TIME_LIMIT;
+      } else {
+        state.time = newTime;
       }
     },
     resetTime(state) {
