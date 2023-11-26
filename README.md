@@ -1,3 +1,4 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/7e4631d8b2267d3487c6/maintainability)](https://codeclimate.com/github/tracktor-git/words-react/maintainability)
 
 # Игра в слова
 
