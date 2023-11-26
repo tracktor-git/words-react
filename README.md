@@ -16,7 +16,7 @@
 1. Клонируйте репозиторий:
 
 ```bash
-git clone https://github.com/tracktor-git/words-game
+git clone https://github.com/tracktor-git/words-react
 ```
 2. Установите все зависимости:
 

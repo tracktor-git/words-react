@@ -8,29 +8,53 @@ import mailRuIcon from '../../Images/social/mailru.svg';
 
 const currentYear = new Date().getFullYear();
 
+const SocialLink = ({ url, image, description }) => (
+  <a href={url} target="_blank" rel="noreferrer">
+    <img src={image} alt={description} title={description} />
+  </a>
+);
+
+const socialLinksData = [
+  {
+    id: 1,
+    url: 'https://t.me/tracktor',
+    image: telegramIcon,
+    description: 'Telegram',
+  },
+  {
+    id: 2,
+    url: 'https://instagram.com/realtracktor',
+    image: instagramIcon,
+    description: 'Instagram',
+  },
+  {
+    id: 3,
+    url: 'mailto:tracktor@bk.ru',
+    image: mailRuIcon,
+    description: 'Mail.RU',
+  },
+  {
+    id: 4,
+    url: 'https://vk.com/tracktor',
+    image: vkIcon,
+    description: 'ВКонтакте',
+  },
+  {
+    id: 5,
+    url: 'https://github.com/tracktor-git',
+    image: githubIcon,
+    description: 'GitHub',
+  },
+];
+
 const Footer = () => (
   <footer className="footer">
     <div className="container footer-container">
-      <div className="copyright">
-        Tracktor ©
-        {currentYear}
-      </div>
+      <div className="copyright">{`Tracktor © ${currentYear}`}</div>
       <div className="social">
-        <a href="https://t.me/tracktor" target="_blank" rel="noreferrer">
-          <img src={telegramIcon} alt="Telegram" />
-        </a>
-        <a href="https://instagram.com/realtracktor" target="_blank" rel="noreferrer">
-          <img src={instagramIcon} alt="Instagram" />
-        </a>
-        <a href="mailto:tracktor@bk.ru" target="_blank" rel="noreferrer">
-          <img src={mailRuIcon} alt="Mail.RU" />
-        </a>
-        <a href="https://vk.com/tracktor" target="_blank" rel="noreferrer">
-          <img src={vkIcon} alt="ВКонтакте" />
-        </a>
-        <a href="https://github.com/tracktor-git" target="_blank" rel="noreferrer">
-          <img src={githubIcon} alt="GitHub" />
-        </a>
+        {socialLinksData.map(({
+          id, url, description, image,
+        }) => <SocialLink key={id} url={url} description={description} image={image} />)}
       </div>
     </div>
   </footer>
