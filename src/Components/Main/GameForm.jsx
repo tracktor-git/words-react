@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
-import selectors from '../../redux/selectors';
+import selectors from 'redux/selectors';
 
 const ErrorBlock = ({ text }) => {
   if (!text) {

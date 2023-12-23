@@ -2,11 +2,12 @@ const UsedWordsBlock = ({ words }) => {
   if (words.length < 1) {
     return null;
   }
+
   return (
     <div className="used-words">
       <p>
         <span className="used-words-title">Ранее использованные слова: </span>
-        <span className="used-words-body">{words.join(', ')}</span>
+        <span className="used-words-body">{words.filter((word) => word !== null).join(', ')}</span>
       </p>
     </div>
   );

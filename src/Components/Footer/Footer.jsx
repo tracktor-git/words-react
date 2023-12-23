@@ -1,10 +1,10 @@
 import './Footer.css';
 
-import instagramIcon from '../../Images/social/instagram.svg';
-import vkIcon from '../../Images/social/vk.svg';
-import githubIcon from '../../Images/social/github.svg';
-import telegramIcon from '../../Images/social/telegram.svg';
-import mailRuIcon from '../../Images/social/mailru.svg';
+import instagramIcon from 'Images/social/instagram.svg';
+import vkIcon from 'Images/social/vk.svg';
+import githubIcon from 'Images/social/github.svg';
+import telegramIcon from 'Images/social/telegram.svg';
+import mailRuIcon from 'Images/social/mailru.svg';
 
 const currentYear = new Date().getFullYear();
 

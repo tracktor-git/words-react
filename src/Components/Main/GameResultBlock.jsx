@@ -1,5 +1,5 @@
-import robotLooseImage from '../../Images/robot_loose.svg';
-import robotWinImage from '../../Images/robot_win.webp';
+import robotLooseImage from 'Images/robot_loose.svg';
+import robotWinImage from 'Images/robot_win.webp';
 
 const GameResult = ({ isShown, robotWin }) => {
   if (!isShown) {

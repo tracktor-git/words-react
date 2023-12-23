@@ -1,9 +1,8 @@
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
+import routes from 'routes';
 
 import Timer from './Timer';
-
-import routes from '../../routes';
 
 const WordLink = ({ word }) => {
   const tooltipStyles = {

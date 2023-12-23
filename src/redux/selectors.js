@@ -1,4 +1,4 @@
-import '../polyfills';
+import 'polyfills';
 
 const getCurrentScore = (state) => state.scoreSlice.score;
 const getUsedWords = (state) => state.usedWordsSlice.usedWords;

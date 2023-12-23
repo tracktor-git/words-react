@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 
-import logoImage from '../../Images/bulb.svg';
+import logoImage from 'Images/bulb.svg';
 import './Header.css';
 
-const scrollToBlock = (event) => {
+const scrollToBlock = (event, headerElement) => {
   event.preventDefault();
 
-  const headerHeight = document.querySelector('.header').offsetHeight;
+  const headerHeight = headerElement.offsetHeight;
   const blockId = event.target.getAttribute('href');
   const offset = document.querySelector(blockId).offsetTop - headerHeight;
 
@@ -20,9 +20,10 @@ const navList = [
 ];
 
 const Header = () => {
-  const [isMenuOpened, setMenuOpened] = useState();
+  const [isMenuOpened, setMenuOpened] = React.useState();
+  const headerRef = React.useRef(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isMenuOpened !== undefined) {
       document.body.classList.toggle('opened');
     }
@@ -32,14 +33,14 @@ const Header = () => {
     if (isMenuOpened) {
       setMenuOpened(false);
     }
-    scrollToBlock(event);
+    scrollToBlock(event, headerRef?.current);
   };
 
   const handleNavButtonClick = () => setMenuOpened(!isMenuOpened);
   const butonClassName = isMenuOpened ? 'burger-menu active' : 'burger-menu';
 
   return (
-    <header className="header">
+    <header className="header" ref={headerRef}>
       <div className="container header-container">
         <div className="logo">
           <a href="./">

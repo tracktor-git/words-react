@@ -1,6 +1,6 @@
 /* eslint-disable max-len, react/jsx-one-expression-per-line */
 import './About.css';
-import aboutPhotoImage from '../../Images/photo_square.jpg';
+import aboutPhotoImage from 'Images/photo_square.jpg';
 
 const About = () => (
   <section className="about" id="about">

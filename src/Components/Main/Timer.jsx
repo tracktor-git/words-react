@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { decrementTime } from '../../redux/slices/timerSlice';
+import { decrementTime } from 'redux/slices/timerSlice';
 
-import selectors from '../../redux/selectors';
+import selectors from 'redux/selectors';
 
 const formatTime = (seconds) => {
   const minutes = String(Math.floor(seconds / 60)).padStart(2, '0');

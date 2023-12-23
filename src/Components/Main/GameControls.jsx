@@ -1,4 +1,4 @@
-import '../../polyfills';
+import 'polyfills';
 
 import * as Yup from 'yup';
 import Axios from 'axios';
@@ -6,6 +6,12 @@ import Axios from 'axios';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { addUsedWords, resetUsedWords } from 'redux/slices/usedWordsSlice';
+import { incrementScore, resetScore } from 'redux/slices/scoreSlice';
+import { addTime, resetTime } from 'redux/slices/timerSlice';
+import selectors from 'redux/selectors';
+
+import routes from 'routes';
 import RobotAnswerBlock from './RobotAnswerBlock';
 import UserWordBlock from './UserWordBlock';
 import GameResultBlock from './GameResultBlock';
@@ -13,14 +19,6 @@ import ScoreBlock from './ScoreBlock';
 import FinishGameButton from './FinishGameButton';
 import GameForm from './GameForm';
 import UsedWordsBlock from './UsedWordsBlock';
-
-import { addUsedWords, resetUsedWords } from '../../redux/slices/usedWordsSlice';
-import { incrementScore, resetScore } from '../../redux/slices/scoreSlice';
-import { addTime, resetTime } from '../../redux/slices/timerSlice';
-
-import selectors from '../../redux/selectors';
-
-import routes from '../../routes';
 
 const UserWordSchema = (userWord, usedWords, firstLetter) => {
   const firstLetterRegexp = new RegExp(`^(${firstLetter})`, 'i');
@@ -153,7 +151,7 @@ const GameControls = () => {
         isDisabled={formik.isSubmitting}
         handleClick={handleFinishGame}
       />
-      <UsedWordsBlock words={usedWords.filter((word) => word !== null)} />
+      <UsedWordsBlock words={usedWords} />
     </>
   );
 };
