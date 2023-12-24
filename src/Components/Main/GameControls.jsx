@@ -79,6 +79,16 @@ const setAxiosOptions = (userWord, usedWords) => ({
   },
 });
 
+const MessagesBlock = ({ children, isShown }) => {
+  if (!isShown) {
+    return null;
+  }
+
+  return (
+    <div className="messages">{children}</div>
+  );
+};
+
 const GameControls = () => {
   const dispatch = useDispatch();
 
@@ -134,17 +144,15 @@ const GameControls = () => {
   return (
     <>
       <GameResultBlock isShown={isRobotLoose || isUserLoose} robotWin={timeLeft < 1} />
-      {!isUserLoose && !isRobotLoose && <GameForm formik={formik} />}
-      {isGameStarted && (
-        <div className="messages">
-          <UserWordBlock word={currentUserWord} />
-          <RobotAnswerBlock
-            isRobotLoose={isRobotLoose}
-            startLetter={lastRobotChar}
-            word={lastRobotWord}
-          />
-        </div>
-      )}
+      <GameForm formik={formik} isShown={!isUserLoose && !isRobotLoose} />
+      <MessagesBlock isShown={isGameStarted}>
+        <UserWordBlock word={currentUserWord} />
+        <RobotAnswerBlock
+          isRobotLoose={isRobotLoose}
+          startLetter={lastRobotChar}
+          word={lastRobotWord}
+        />
+      </MessagesBlock>
       <ScoreBlock score={currentScore} />
       <FinishGameButton
         isShown={isGameStarted}

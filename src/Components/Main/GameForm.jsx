@@ -5,6 +5,12 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 import selectors from 'redux/selectors';
 
+const inputSelect = (element) => {
+  setTimeout(() => {
+    element?.select();
+  }, 10);
+};
+
 const ErrorBlock = ({ text }) => {
   if (!text) {
     return null;
@@ -17,12 +23,6 @@ const ErrorBlock = ({ text }) => {
   );
 };
 
-const inputSelect = (element) => {
-  setTimeout(() => {
-    element?.select();
-  }, 10);
-};
-
 const SubmitButton = ({ isSubmitting }) => (
   <button className="submit" type="submit" disabled={isSubmitting}>
     {isSubmitting && <i className="spinner" />}
@@ -31,7 +31,7 @@ const SubmitButton = ({ isSubmitting }) => (
   </button>
 );
 
-const GameForm = ({ formik }) => {
+const GameForm = ({ formik, isShown }) => {
   const usedWords = useSelector(selectors.getUsedWords);
   const lastRobotChar = useSelector(selectors.getLastRobotChar);
   const inputRef = React.useRef(null);
@@ -39,6 +39,10 @@ const GameForm = ({ formik }) => {
   React.useEffect(() => {
     inputSelect(inputRef?.current);
   }, [formik.errors.userWord, usedWords]);
+
+  if (!isShown) {
+    return null;
+  }
 
   return (
     <form onSubmit={formik.handleSubmit} className={formik.errors.userWord && 'invalid'}>
