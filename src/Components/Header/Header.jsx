@@ -22,10 +22,13 @@ const navList = [
 const Header = () => {
   const [isMenuOpened, setMenuOpened] = React.useState();
   const headerRef = React.useRef(null);
+  const bodyRef = React.useRef(document.body);
 
   React.useEffect(() => {
-    if (isMenuOpened !== undefined) {
-      document.body.classList.toggle('opened');
+    if (isMenuOpened) {
+      bodyRef.current.classList.add('opened');
+    } else {
+      bodyRef.current.classList.remove('opened');
     }
   }, [isMenuOpened]);
 
